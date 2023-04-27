@@ -6,7 +6,7 @@ from keep_alive import keep_alive
 intents = discord.Intents.default()
 intents.message_content = True
 
-DISCORD_KEY = os.environ['DISCORD_KEY']
+DISCORD_KEY = os.getenv['DISCORD_KEY']
 OPENAI_KEY = os.getenv("OPENAI_KEY")
 client = discord.Client(intents=intents)
 
