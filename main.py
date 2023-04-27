@@ -48,7 +48,7 @@ def openai_call(message):
             max_tokens=800
         )
         response = completion.choices[0].message.content
-        print(completion.usage.total_tokens)
+        print(completion)
         update_conversation(message_history, "assistant", response)
         return response
     except Exception as e:
