@@ -1,7 +1,6 @@
 import discord
 import openai
 import os
-from keep_alive import keep_alive
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -28,8 +27,6 @@ async def on_message(message):
     if response:
       completion = openai_call(response)
       await message.channel.send(completion)
-
-keep_alive()
 
 def openai_call(message):
   update_conversation(message_history, "user", message)
