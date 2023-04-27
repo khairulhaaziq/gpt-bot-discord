@@ -39,6 +39,7 @@ async def on_message(message):
 
 
 def openai_call(message):
+    global total_tokens
     update_conversation(message_history, "user", message)
 
     try:
@@ -48,7 +49,7 @@ def openai_call(message):
             max_tokens=800
         )
         response = completion.choices[0].message.content
-        print(completion)
+        total_tokens += completion.usage.total_tokens
         update_conversation(message_history, "assistant", response)
         return response
     except Exception as e:
