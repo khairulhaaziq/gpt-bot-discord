@@ -2,16 +2,18 @@ import discord
 import openai
 import os
 
+DISCORD_KEY = os.getenv("DISCORD_KEY")
+OPENAI_KEY = os.getenv("OPENAI_KEY")
+TRIGGER = '!chat'
+TOTAL_TOKENS_TRIGGER = '!chat total_tokens'
+
 intents = discord.Intents.default()
 intents.message_content = True
 
-DISCORD_KEY = os.getenv("DISCORD_KEY")
-OPENAI_KEY = os.getenv("OPENAI_KEY")
 client = discord.Client(intents=intents)
 
 message_history = []
 total_tokens = 0
-
 
 @client.event
 async def on_ready():
@@ -23,13 +25,13 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('!chat total_tokens'):
+    if message.content.startswith(TOTAL_TOKENS_TRIGGER):
         cost_per_1k_tokens = 0.002
         estimated_price = (total_tokens / 1000) * cost_per_1k_tokens
         estimated_price_in_rm = estimated_price * 4.46
         await message.channel.send(f'total_tokens: {total_tokens}, estimated spent: RM{estimated_price_in_rm:.4f}')
 
-    elif message.content.startswith('!chat'):
+    elif message.content.startswith(TRIGGER):
         split_text = message.content.split(" ", 1)
         response = split_text[1] if len(split_text) > 1 else ""
 
