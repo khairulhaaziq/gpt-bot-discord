@@ -27,7 +27,7 @@ async def on_message(message):
         cost_per_1k_tokens = 0.002
         estimated_price = (total_tokens / 1000) * cost_per_1k_tokens
         estimated_price_in_rm = estimated_price * 4.46
-        await message.channel.send(f'total_tokens: {total_tokens}, estimated price: RM{estimated_price_in_rm:.4f}')
+        await message.channel.send(f'total_tokens: {total_tokens}, estimated spent: RM{estimated_price_in_rm:.4f}')
 
     elif message.content.startswith('!chat'):
         split_text = message.content.split(" ", 1)
