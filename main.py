@@ -45,10 +45,10 @@ def openai_call(message):
         completion = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=message_history,
-            max_tokens=500
+            max_tokens=800
         )
         response = completion.choices[0].message.content
-        total_tokens += completion.usage.total_tokens
+        print(completion.usage.total_tokens)
         update_conversation(message_history, "assistant", response)
         return response
     except Exception as e:
