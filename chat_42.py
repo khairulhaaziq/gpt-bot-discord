@@ -29,7 +29,7 @@ def get_top_endpoint(question):
     )
 
     response_text = completion.choices[0].message.content
-    return response_text.split(" ", 1)
+    return response_text
 
 def send_request_to_endpoint(question):
     endpoint = get_top_endpoint(question)
