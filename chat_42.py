@@ -22,7 +22,7 @@ def get_endpoint_scores(question):
     prompt = f"Given the question '{question}' and the list of endpoints: {endpoints}, return the single most valid endpoint, nothing else.\n\n"
 
     completion = openai.Completion.create(
-        engine="gpt-3.5-turbo",
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "message": prompt}],
         max_tokens=100,
         temperature=0.5,
