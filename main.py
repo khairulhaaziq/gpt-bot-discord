@@ -1,12 +1,13 @@
 import discord
 import openai
 import os
-from chat_42 import send_request_to_endpoint,get_top_endpoint
+from chat_42 import send_request_to_endpoint, get_top_endpoint, endpoints, get_answer_from_data
 
 DISCORD_KEY = os.getenv("DISCORD_KEY")
 OPENAI_KEY = os.getenv("OPENAI_KEY")
 TRIGGER = '!chat '
 TOTAL_TOKENS_TRIGGER = '!chat total_tokens'
+CHAT42_HELP_TRIGGER = '!chat42 help'
 CHAT42_TRIGGER = '!chat42'
 
 intents = discord.Intents.default()
@@ -32,7 +33,9 @@ async def on_message(message):
         cost_per_1k_tokens = 0.002
         estimated_price = (total_tokens / 1000) * cost_per_1k_tokens
         estimated_price_in_rm = estimated_price * 4.46
-        await message.channel.send(f'total_tokens: {total_tokens}, estimated spent: RM{estimated_price_in_rm:.4f}')
+        await message.channel.send(
+            f'total_tokens: {total_tokens}, estimated spent: RM{estimated_price_in_rm:.4f}'
+        )
 
     elif message.content.startswith(TRIGGER):
         split_text = message.content.split(" ", 1)
@@ -42,25 +45,32 @@ async def on_message(message):
             completion = openai_call(response)
             await message.channel.send(completion)
 
+    elif message.content.startswith(CHAT42_HELP_TRIGGER):
+        await message.channel.send(endpoints)
+
     elif message.content.startswith(CHAT42_TRIGGER):
         split_text = message.content.split(" ", 1)
         question = split_text[1] if len(split_text) > 1 else ""
 
         if question:
-            best_endpoint = get_top_endpoint(question)
-            response = send_request_to_endpoint(best_endpoint)
-            await message.channel.send(response)
+            endpoint = await get_top_endpoint(question)
+            if endpoint.strip('/') in [e.strip('/') for e in endpoints]:
+                await message.channel.send(f'requesting endpoint: {endpoint}')
+                response = send_request_to_endpoint(endpoint)
+                # answer = get_answer_from_data(question, response, endpoint)
+                await message.channel.send(response)
+            else:
+                await message.channel.send('There is no valid endpoint.')
+
 
 def openai_call(message):
     global total_tokens
     update_conversation(message_history, "user", message)
 
     try:
-        completion = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=message_history,
-            max_tokens=800
-        )
+        completion = openai.ChatCompletion.create(model="gpt-3.5-turbo",
+                                                  messages=message_history,
+                                                  max_tokens=800)
         response = completion.choices[0].message.content
         total_tokens += completion.usage.total_tokens
         update_conversation(message_history, "assistant", response)
