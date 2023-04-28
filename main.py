@@ -1,11 +1,13 @@
 import discord
 import openai
 import os
+from chat_42 import send_request_to_endpoint,get_best_endpoint
 
 DISCORD_KEY = os.getenv("DISCORD_KEY")
 OPENAI_KEY = os.getenv("OPENAI_KEY")
 TRIGGER = '!chat'
 TOTAL_TOKENS_TRIGGER = '!chat total_tokens'
+CHAT42_TRIGGER = '!chat42'
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -14,6 +16,7 @@ client = discord.Client(intents=intents)
 
 message_history = []
 total_tokens = 0
+
 
 @client.event
 async def on_ready():
@@ -39,6 +42,14 @@ async def on_message(message):
             completion = openai_call(response)
             await message.channel.send(completion)
 
+    elif message.content.startswith(CHAT42_TRIGGER):
+        split_text = message.content.split(" ", 1)
+        question = split_text[1] if len(split_text) > 1 else ""
+
+        if question:
+            best_endpoint = get_best_endpoint(question)
+            response = send_request_to_endpoint(best_endpoint)
+            await message.channel.send(response)
 
 def openai_call(message):
     global total_tokens
