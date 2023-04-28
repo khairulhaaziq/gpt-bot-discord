@@ -37,7 +37,7 @@ def get_best_endpoint(question):
     return endpoints[best_index]
 
 def send_request_to_endpoint(endpoint):
-    base_url = "https://example.com"  # Replace this with your base API URL
+    base_url = "https://four2-campus-stats-backend.onrender.com"  # Replace this with your base API URL
     url = base_url + endpoint
     response = requests.get(url)
 
