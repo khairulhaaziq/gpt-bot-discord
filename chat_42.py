@@ -19,17 +19,12 @@ endpoints = [
 ]
 
 def get_endpoint_scores(question):
-    prompt = f"Given the question '{question}', please rank the relevance of the following API endpoints by assigning a score from 1 to 10 (1 being least relevant, 10 being most relevant):\n\n"
-    
-    for endpoint in endpoints:
-        prompt += f"{endpoint}: {{score}}\n"
+    prompt = f"Given the question '{question}' and the list of endpoints: {endpoints}, return the single most valid endpoint, nothing else.\n\n"
 
     completion = openai.Completion.create(
         engine="gpt-3.5-turbo",
-        prompt=prompt,
+        messages=[{"role": "user", "message": prompt}],
         max_tokens=100,
-        n=1,
-        stop=None,
         temperature=0.5,
     )
 
