@@ -31,8 +31,7 @@ def get_top_endpoint(question):
     response_text = completion.choices[0].message.content
     return response_text.split(" ", 1)
 
-def send_request_to_endpoint(question):
-    endpoint = get_top_endpoint(question)
+def send_request_to_endpoint(endpoint):
     base_url = "https://four2-campus-stats-backend.onrender.com"  # Replace this with your base API URL
     url = base_url + endpoint
     response = requests.get(url)
