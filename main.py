@@ -47,9 +47,8 @@ async def on_message(message):
         question = split_text[1] if len(split_text) > 1 else ""
 
         if question:
-            completion = send_request_to_endpoint(question)
-            total_tokens += completion.usage.total_tokens
-            await message.channel.send(completion.choices[0].message.content)
+            response = send_request_to_endpoint(question)
+            await message.channel.send(response)
 
 def openai_call(message):
     global total_tokens
