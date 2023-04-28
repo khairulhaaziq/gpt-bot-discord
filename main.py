@@ -5,7 +5,7 @@ from chat_42 import send_request_to_endpoint,get_best_endpoint
 
 DISCORD_KEY = os.getenv("DISCORD_KEY")
 OPENAI_KEY = os.getenv("OPENAI_KEY")
-TRIGGER = '!chat'
+TRIGGER = '!chat '
 TOTAL_TOKENS_TRIGGER = '!chat total_tokens'
 CHAT42_TRIGGER = '!chat42'
 
