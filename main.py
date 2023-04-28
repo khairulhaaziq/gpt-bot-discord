@@ -5,7 +5,7 @@ from chat_42 import send_request_to_endpoint, get_top_endpoint, endpoints, get_a
 
 DISCORD_KEY = os.getenv("DISCORD_KEY")
 OPENAI_KEY = os.getenv("OPENAI_KEY")
-TRIGGER = '!chat '
+TRIGGER = '!chat'
 TOTAL_TOKENS_TRIGGER = '!chat total_tokens'
 CHAT42_HELP_TRIGGER = '!chat42 help'
 CHAT42_TRIGGER = '!chat42'
@@ -37,14 +37,6 @@ async def on_message(message):
             f'total_tokens: {total_tokens}, estimated spent: RM{estimated_price_in_rm:.4f}'
         )
 
-    elif message.content.startswith(TRIGGER):
-        split_text = message.content.split(" ", 1)
-        response = split_text[1] if len(split_text) > 1 else ""
-
-        if response:
-            completion = openai_call(response)
-            await message.channel.send(completion)
-
     elif message.content.startswith(CHAT42_HELP_TRIGGER):
         await message.channel.send(endpoints)
 
@@ -61,6 +53,28 @@ async def on_message(message):
                 await message.channel.send(response)
             else:
                 await message.channel.send('There is no valid endpoint.')
+
+    elif message.content.startswith(TRIGGER):
+        split_text = message.content.split(" ", 1)
+        response = split_text[1] if len(split_text) > 1 else ""
+
+        if (response and response != 'help'):
+            completion = openai_call(response)
+            await message.channel.send(completion)
+
+        else:
+            help_response = """
+            ```
+            Commands:
+            !chat <question>       get response to question
+            !chat                  list commands
+            !chat help             list commands
+            !chat42 total_tokens   total tokens used with amount spent in RM
+            !chat42 <question>     get endpoint response of question
+            !chat42 help           list endpoints
+            ```
+            """
+            await message.channel.send(help_response)
 
 
 def openai_call(message):
