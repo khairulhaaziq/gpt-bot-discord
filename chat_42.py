@@ -28,7 +28,7 @@ def get_endpoint_scores(question):
         temperature=0.5,
     )
 
-    response_text = completion.choices[0].text.strip()
+    response_text = completion.choices[0].message.content
     scores = [int(line.split(':')[-1].strip()) for line in response_text.split('\n')]
     return scores
 
