@@ -47,7 +47,8 @@ async def on_message(message):
         question = split_text[1] if len(split_text) > 1 else ""
 
         if question:
-            response = send_request_to_endpoint(question)
+            best_endpoint = get_top_endpoint(question)
+            response = send_request_to_endpoint(best_endpoint)
             await message.channel.send(response)
 
 def openai_call(message):
