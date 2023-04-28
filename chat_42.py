@@ -29,8 +29,7 @@ def get_endpoint_scores(question):
     )
 
     response_text = completion.choices[0].message.content
-    scores = [int(line.split(':')[-1].strip()) for line in response_text.split('\n')]
-    return scores
+    return response_text.split(" ", 1)
 
 def get_best_endpoint(question):
     scores = get_endpoint_scores(question)
